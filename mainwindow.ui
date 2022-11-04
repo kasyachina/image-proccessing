@@ -27,15 +27,16 @@
     <property name="title">
      <string>Файл</string>
     </property>
-    <addaction name="action_3"/>
-    <addaction name="action_4"/>
+    <addaction name="open"/>
+    <addaction name="save_as"/>
+    <addaction name="default_2"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
      <string>Низкочастотные фильтры</string>
     </property>
-    <addaction name="action"/>
-    <addaction name="action_2"/>
+    <addaction name="blur"/>
+    <addaction name="gaussian"/>
    </widget>
    <widget class="QMenu" name="menu_3">
     <property name="title">
@@ -53,24 +54,32 @@
    <addaction name="menu_4"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="action_3">
+  <action name="open">
    <property name="text">
     <string>Открыть</string>
    </property>
   </action>
-  <action name="action_4">
+  <action name="save_as">
    <property name="text">
     <string>Сохранить как</string>
    </property>
   </action>
-  <action name="action">
+  <action name="blur">
    <property name="text">
     <string>Однородный усредняющий фильтр</string>
    </property>
   </action>
-  <action name="action_2">
+  <action name="gaussian">
    <property name="text">
     <string>Фильтр Гаусса</string>
+   </property>
+  </action>
+  <action name="default_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Использовать изображения по умолчанию</string>
    </property>
   </action>
  </widget>

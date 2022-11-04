@@ -16,9 +16,17 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-private:
-    Ui::MainWindow *ui;
-    QVBoxLayout *v;
+private slots:
 
+    void on_open_triggered();
+
+    void on_save_as_triggered();
+
+private:
+    bool srcProccessed = false;
+    Ui::MainWindow *ui;
+    QString filepath;
+    QImage src;
+    QImage dst;
 };
 #endif // MAINWINDOW_H
