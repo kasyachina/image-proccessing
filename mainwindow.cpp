@@ -1,9 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QBoxLayout>
-#include <QComboBox>
-#include <QFileDialog>
-#include <QMessageBox>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -15,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete h;
 }
 
 void MainWindow::on_open_triggered()
@@ -23,6 +21,7 @@ void MainWindow::on_open_triggered()
     if (!filepath.isEmpty())
     {
         ui -> default_images -> setChecked(false);
+        ui -> default_images -> setEnabled(true);
     }
 }
 
@@ -49,5 +48,32 @@ void MainWindow::on_save_as_triggered()
     {
         QMessageBox::warning(this, "Ошибка", "Нечего сохранять");
     }
+}
+
+
+void MainWindow::on_default_images_triggered()
+{
+    filepath = "";
+    clearLayout();
+    srcProccessed = false;
+    ui -> default_images -> setEnabled(false);
+}
+
+
+void MainWindow::on_blur_triggered()
+{
+    cv::Mat cvdst, cvsrc;
+    getSrc(cvsrc, cvdst);
+    cv::blur(cvsrc, cvdst, cv::Size(5, 5));
+    setData(cvsrc, cvdst);
+}
+
+
+void MainWindow::on_gaussian_triggered()
+{
+    cv::Mat cvdst, cvsrc;
+    getSrc(cvsrc, cvdst);
+    cv::GaussianBlur(cvsrc, cvdst, cv::Size(5, 5), 0, 0);
+    setData(cvsrc, cvdst);
 }
 

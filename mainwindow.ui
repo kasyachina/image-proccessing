@@ -29,7 +29,7 @@
     </property>
     <addaction name="open"/>
     <addaction name="save_as"/>
-    <addaction name="default_2"/>
+    <addaction name="default_images"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
@@ -74,9 +74,15 @@
     <string>Фильтр Гаусса</string>
    </property>
   </action>
-  <action name="default_2">
+  <action name="default_images">
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>Использовать изображения по умолчанию</string>
