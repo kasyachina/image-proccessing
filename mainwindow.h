@@ -78,16 +78,24 @@ private:
         int prev = 0, cur = 128;
         const int eps = 5;
         int sums[2], cnts[2], u[2];
+
+        //calculate histogram manually
+        int hist[256] = {0};
+        for(int i = 0; i < cvsrc.rows; ++i)
+            for(int j = 0; j < cvsrc.cols; ++j)
+            {
+                ++hist[cvsrc.at<uchar>(i,j)];
+            }
+
         while(std::abs<int>(cur - prev) > eps)
         {
             sums[0] = sums[1] = 0;
             cnts[0] = cnts[1] = 0;
-            for(int i = 0; i < cvsrc.rows; ++i)
-                for(int j = 0; j < cvsrc.cols; ++j)
-                {
-                    sums[cvsrc.at<uchar>(i,j) > cur] += cvsrc.at<uchar>(i,j);
-                    cnts[cvsrc.at<uchar>(i,j) > cur] += 1;
-                }
+            for (int i = 0; i < 256; ++i)
+            {
+                sums[i > cur] += hist[i] * i;
+                cnts[i > cur] += hist[i];
+            }
             u[0] = sums[0] / (std::max(cnts[0], 1));
             u[1] = sums[1] / (std::max(cnts[1], 1));
             prev = cur;

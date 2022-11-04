@@ -23,6 +23,7 @@ void MainWindow::on_open_triggered()
         ui -> default_images -> setChecked(false);
         ui -> default_images -> setEnabled(true);
         clearLayout();
+        statusBar() -> showMessage("Выбран файл: " + filepath);
     }
 }
 
