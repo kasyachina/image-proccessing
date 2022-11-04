@@ -33,6 +33,8 @@ private slots:
 
     void on_adaptive_thresholding_triggered();
 
+    void on_otsu_thresholding_triggered();
+
 private:
     void clearLayout()
     {
