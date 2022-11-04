@@ -25,13 +25,13 @@ private slots:
 
     void on_open_triggered();
 
-    void on_save_as_triggered();
-
     void on_default_images_triggered();
 
     void on_blur_triggered();
 
     void on_gaussian_triggered();
+
+    void on_adaptive_thresholding_triggered();
 
 private:
     void clearLayout()
@@ -45,7 +45,7 @@ private:
     {
         if (!filepath.isEmpty())
         {
-            cvsrc = cv::imread(filepath.toStdString());
+            cvsrc = cv::imread(filepath.toStdString(), cv::IMREAD_GRAYSCALE);
         }
         else
         {
@@ -57,8 +57,8 @@ private:
     {
         srcProccessed = true;
         clearLayout();
-        QImage im1((uchar*) cvsrc.data, cvsrc.cols, cvsrc.rows, cvsrc.step, QImage::Format_RGB888);
-        QImage im2((uchar*) cvdst.data, cvdst.cols, cvdst.rows, cvdst.step, QImage::Format_RGB888);
+        QImage im1((uchar*) cvsrc.data, cvsrc.cols, cvsrc.rows, cvsrc.step, QImage::Format_Grayscale8);
+        QImage im2((uchar*) cvdst.data, cvdst.cols, cvdst.rows, cvdst.step, QImage::Format_Grayscale8);
         h = new QHBoxLayout(centralWidget());
         src.convertFromImage(im1);
         dst.convertFromImage(im2);

@@ -25,32 +25,6 @@ void MainWindow::on_open_triggered()
     }
 }
 
-void MainWindow::on_save_as_triggered()
-{
-    if (srcProccessed)
-    {
-        QString savepath = QFileDialog::getSaveFileName(this, "Сохранить файл как", "/home");
-        if (!savepath.isEmpty())
-        {
-            QFile file(savepath);
-            if (file.open(QIODevice::WriteOnly))
-            {
-                QDataStream out(&file);
-                out << dst;
-            }
-            else
-            {
-                QMessageBox::warning(this, "Ошибка", "Невозможно открыть файл");
-            }
-        }
-    }
-    else
-    {
-        QMessageBox::warning(this, "Ошибка", "Нечего сохранять");
-    }
-}
-
-
 void MainWindow::on_default_images_triggered()
 {
     filepath = "";
@@ -74,6 +48,15 @@ void MainWindow::on_gaussian_triggered()
     cv::Mat cvdst, cvsrc;
     getSrc(cvsrc, cvdst);
     cv::GaussianBlur(cvsrc, cvdst, cv::Size(5, 5), 0, 0);
+    setData(cvsrc, cvdst);
+}
+
+
+void MainWindow::on_adaptive_thresholding_triggered()
+{
+    cv::Mat cvdst, cvsrc;
+    getSrc(cvsrc, cvdst);
+    cv::adaptiveThreshold(cvsrc, cvdst, 255, cv::AdaptiveThresholdTypes::ADAPTIVE_THRESH_MEAN_C, cv::ThresholdTypes::THRESH_BINARY, 7, 0);
     setData(cvsrc, cvdst);
 }
 

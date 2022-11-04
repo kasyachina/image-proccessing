@@ -47,6 +47,7 @@
     <property name="title">
      <string>Адаптивная пороговая обработка</string>
     </property>
+    <addaction name="adaptive_thresholding"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
@@ -86,6 +87,11 @@
    </property>
    <property name="text">
     <string>Использовать изображения по умолчанию</string>
+   </property>
+  </action>
+  <action name="adaptive_thresholding">
+   <property name="text">
+    <string>Адаптивная пороговая обработка по среднему значению</string>
    </property>
   </action>
  </widget>
