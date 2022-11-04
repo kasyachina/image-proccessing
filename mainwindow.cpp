@@ -22,6 +22,7 @@ void MainWindow::on_open_triggered()
     {
         ui -> default_images -> setChecked(false);
         ui -> default_images -> setEnabled(true);
+        clearLayout();
     }
 }
 
@@ -66,6 +67,15 @@ void MainWindow::on_otsu_thresholding_triggered()
     cv::Mat cvdst, cvsrc;
     getSrc(cvsrc, cvdst);
     cv::threshold(cvsrc, cvdst, 0, 255, cv::THRESH_BINARY + cv::THRESH_OTSU);
+    setData(cvsrc, cvdst);
+}
+
+
+void MainWindow::on_histogramm_thresholding_triggered()
+{
+    cv::Mat cvdst, cvsrc;
+    getSrc(cvsrc, cvdst);
+    cv::threshold(cvsrc, cvdst, getHistogramThreshold(cvsrc), 255, cv::THRESH_BINARY);
     setData(cvsrc, cvdst);
 }
 
