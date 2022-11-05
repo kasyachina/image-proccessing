@@ -10,10 +10,12 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    statustipfilter.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    statustipfilter.h
 
 FORMS += \
     mainwindow.ui
@@ -26,3 +28,6 @@ LIBS += `pkg-config --cflags --libs opencv`
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    res.qrc
