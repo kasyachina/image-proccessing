@@ -30,19 +30,40 @@ void MainWindow::getSrc(cv::Mat& cvsrc, cv::Mat& cvdst)
 {
     if (!filepath.isEmpty())
     {
-        cvsrc = cv::imread(filepath.toStdString(), cv::IMREAD_GRAYSCALE);
+        cvsrc = cv::imread(filepath.toStdString(), cv::IMREAD_ANYDEPTH);
     }
     else
     {
+        QImage img;
         switch(curProccess)
         {
             case imageProccess::Blur:
-                QImage img(":/images/blur.bmp");
+                img = QImage(":/images/blur.bmp");
                 cvsrc = cv::Mat(img.height(), img.width(), CV_8U, img.bits(), img.bytesPerLine()).clone();
                 break;
-        };
+            case imageProccess::Gaussian:
+                img = QImage(":/images/gaussian.bmp");
+                cvsrc = cv::Mat(img.height(), img.width(), CV_8U, img.bits(), img.bytesPerLine()).clone();
+                break;
+            case imageProccess::Histogram:
+                img = QImage(":/images/histogram.bmp");
+                img = img.convertToFormat(QImage::Format_Grayscale8);
+                cvsrc = cv::Mat(img.height(), img.width(), CV_8U, img.bits(), img.bytesPerLine()).clone();
+                break;
+            case imageProccess::Otsu:
+                img = QImage(":/images/otsu.bmp");
+                cvsrc = cv::Mat(img.height(), img.width(), CV_8U, img.bits(), img.bytesPerLine()).clone();
+                break;
+            case imageProccess::Adaptive:
+                img = QImage(":/images/adaptive.jpg");
+                img.convertTo(QImage::Format_Grayscale8);
+                img = img.scaled(400,400);
+                cvsrc = cv::Mat(img.height(), img.width(), CV_8U, img.bits(), img.bytesPerLine()).clone();
+                break;
+            case imageProccess::None:
 
-        //handle default images
+                break;
+        };
     }
     cvdst = cvsrc.clone();
 }
@@ -54,20 +75,22 @@ void MainWindow::setData(const cv::Mat& cvsrc, const cv::Mat& cvdst)
     QImage im1((uchar*) cvsrc.data, cvsrc.cols, cvsrc.rows, cvsrc.step, QImage::Format_Grayscale8);
     QImage im2((uchar*) cvdst.data, cvdst.cols, cvdst.rows, cvdst.step, QImage::Format_Grayscale8);
     h = new QHBoxLayout(centralWidget());
-    src.convertFromImage(im1);
-    dst.convertFromImage(im2);
+    src.convertFromImage(im1.scaled(400, 400));
+    dst.convertFromImage(im2.scaled(400, 400));
     lsrc = new QLabel(this), ldst = new QLabel(this);
     lsrc -> setPixmap(src);
+    lsrc -> setScaledContents(true);
     ldst -> setPixmap(dst);
+    ldst -> setScaledContents(true);
     h -> addWidget(lsrc);
     h -> addWidget(ldst);
 }
 
 int MainWindow::getHistogramThreshold(const cv::Mat& cvsrc)
 {
-    int prev = 0, cur = 128;
+    int prev = 0, cur = 10;
     const int eps = 5;
-    int sums[2], cnts[2], u[2];
+    long long sums[2], cnts[2], u[2];
 
     //calculate histogram manually
     int hist[256] = {0};
@@ -86,8 +109,8 @@ int MainWindow::getHistogramThreshold(const cv::Mat& cvsrc)
             sums[i > cur] += hist[i] * i;
             cnts[i > cur] += hist[i];
         }
-        u[0] = sums[0] / (std::max(cnts[0], 1));
-        u[1] = sums[1] / (std::max(cnts[1], 1));
+        u[0] = sums[0] / (std::max(cnts[0], 1LL));
+        u[1] = sums[1] / (std::max(cnts[1], 1LL));
         prev = cur;
         cur = (u[0] + u[1]) / 2;
     }
@@ -96,7 +119,7 @@ int MainWindow::getHistogramThreshold(const cv::Mat& cvsrc)
 
 void MainWindow::on_open_triggered()
 {
-    filepath = QFileDialog::getOpenFileName(this, "Открыть файл", "/home", "Images (*.jpg *.gif *.tif *.bmp *.png *.pcx)");
+    filepath = QFileDialog::getOpenFileName(this, "Открыть файл", "/home", "Images (*.jpg *.bmp *.png *.jpeg)");
     if (!filepath.isEmpty())
     {
         ui -> default_images -> setChecked(false);
@@ -120,7 +143,7 @@ void MainWindow::on_blur_triggered()
     curProccess = imageProccess::Blur;
     cv::Mat cvdst, cvsrc;
     getSrc(cvsrc, cvdst);
-    cv::blur(cvsrc, cvdst, cv::Size(5, 5));
+    cv::blur(cvsrc, cvdst, cv::Size(3, 3));
     setData(cvsrc, cvdst);
 }
 
