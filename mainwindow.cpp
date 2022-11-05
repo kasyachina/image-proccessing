@@ -90,7 +90,7 @@ int MainWindow::getHistogramThreshold(const cv::Mat& cvsrc)
 {
     int prev = 0, cur = 10;
     const int eps = 5;
-    long long sums[2], cnts[2], u[2];
+    int u[2];
 
     //calculate histogram manually
     int hist[256] = {0};
@@ -100,17 +100,19 @@ int MainWindow::getHistogramThreshold(const cv::Mat& cvsrc)
             ++hist[cvsrc.at<uchar>(i,j)];
         }
 
+    long long sums[256], cnts[256];
+    sums[0] = 0;
+    cnts[0] = hist[0];
+    for (int i = 1; i < 256; ++i)
+    {
+        sums[i] = sums[i - 1] + hist[i] * i;
+        cnts[i] = cnts[i - 1] + hist[i];
+    }
+
     while(std::abs<int>(cur - prev) > eps)
     {
-        sums[0] = sums[1] = 0;
-        cnts[0] = cnts[1] = 0;
-        for (int i = 0; i < 256; ++i)
-        {
-            sums[i > cur] += hist[i] * i;
-            cnts[i > cur] += hist[i];
-        }
-        u[0] = sums[0] / (std::max(cnts[0], 1LL));
-        u[1] = sums[1] / (std::max(cnts[1], 1LL));
+        u[0] = sums[cur] / (std::max(cnts[cur], 1LL));
+        u[1] = (sums[255] - sums[cur]) / (std::max(cnts[255] - cnts[cur], 1LL));
         prev = cur;
         cur = (u[0] + u[1]) / 2;
     }
